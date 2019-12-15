@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Photojor</string>
     <string name="add_ingredient">Добавить ингридиент</string>
-    <string name="capture_button">Take a photo button</string>
+    <string name="capture_button">Take a photo</string>
     <string name="menu_history">History</string>
     <string name="menu_photo">Fridge photo</string>
     <string name="menu_recipes">Recipes</string>

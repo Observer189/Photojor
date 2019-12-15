@@ -38,9 +38,12 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.photojor.Utils.ApiService;
 import com.example.photojor.Utils.Consts;
+import com.example.photojor.model.Ingredient;
 import com.example.photojor.model.ServIngrResponse;
 
 import java.io.File;
@@ -63,10 +66,12 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PhotoFragment extends Fragment {
     View view;
-    private Button btnCapture;
+    private ImageButton btnCapture;
     private TextureView textureView;
 
     //Check state orientation of output image
@@ -95,6 +100,7 @@ public class PhotoFragment extends Fragment {
     boolean isLocked;
     ServIngrResponse servResp;
 
+    DownloadImageTask downloadImageTask;
     CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override
         public void onOpened(@NonNull CameraDevice camera) {
@@ -128,7 +134,11 @@ public class PhotoFragment extends Fragment {
         textureView.setSurfaceTextureListener(textureListener);
 
 
-
+        Consts.retrofit = new Retrofit.Builder()
+                .baseUrl(Consts.baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        Consts.service = Consts.retrofit.create(ApiService.class);
 
 
         btnCapture = view.findViewById(R.id.capture_image);
@@ -145,7 +155,7 @@ public class PhotoFragment extends Fragment {
                 }
             }
         };
-
+        downloadImageTask=new DownloadImageTask();
         btnCapture.setOnClickListener(listener);
         return view;
     }
@@ -178,8 +188,8 @@ public class PhotoFragment extends Fragment {
                                    Response<ServIngrResponse> response) {
                 Log.wtf("Upload", "success:"+response.body().getName() );
                 servResp=response.body();
-                new DownloadImageTask()
-                        .execute("https://s1.webspoon.ru/ingredients/97a66f43b68cd562737d5ff474736a3c_31575.jpg");
+                downloadImageTask=new DownloadImageTask();
+                   downloadImageTask.execute(servResp.getImageUrl());
             }
 
             @Override
@@ -425,11 +435,13 @@ public class PhotoFragment extends Fragment {
     @Override
     public void onPause() {
         stopBackgroundThread();
+        cameraDevice.close();
         super.onPause();
     }
 
     private void stopBackgroundThread() {
         mBackgroundThread.quitSafely();
+        downloadImageTask.cancel(false);
         try{
             mBackgroundThread.join();
             mBackgroundThread= null;
@@ -453,11 +465,13 @@ public class PhotoFragment extends Fragment {
             try {
                 InputStream in = new java.net.URL(urldisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
-                Intent intent=new Intent(getActivity(),ListActivity.class);
-                intent.putExtra("NewIng",Consts.gson.toJson(servResp));
-                intent.putExtra("image",Consts.gson.toJson(mIcon11));
-                Log.w("intent: ",intent.getStringExtra("image"));
-                startActivity(intent);
+                Consts.fridge.add(new Ingredient(servResp.getName(),mIcon11));
+                //Log.wtf("fridge ","up");
+                //Intent intent=new Intent(getActivity(),ListActivity.class);
+                //intent.putExtra("NewIng",Consts.gson.toJson(servResp));
+                //intent.putExtra("image",Consts.gson.toJson(mIcon11));
+                //Log.w("intent: ",intent.getStringExtra("image"));
+                //tartActivity(intent);
 
             } catch (Exception e) {
                 Log.e("Ошибка передачи", e.getMessage());

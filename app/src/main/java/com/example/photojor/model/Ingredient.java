@@ -7,7 +7,10 @@ import java.net.URI;
 
 public class Ingredient {
     String name;
+    int id;
     Bitmap image;
+
+    String saveBit;
     public Ingredient(String name,Bitmap im)
 
     {
@@ -28,5 +31,21 @@ public class Ingredient {
 
     public Bitmap getImage() {
         return image;
+    }
+
+    public void setSaveBit(String saveBit) {
+        this.saveBit = saveBit;
+    }
+
+    public String getSaveBit() {
+        return saveBit;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

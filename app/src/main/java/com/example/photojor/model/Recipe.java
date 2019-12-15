@@ -23,5 +23,17 @@ public class Recipe {
     public void setSteps(ArrayList<Step> steps) {
         this.steps = steps;
     }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<Step> getSteps() {
+        return steps;
+    }
 }
 

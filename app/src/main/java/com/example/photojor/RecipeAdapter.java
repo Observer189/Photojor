@@ -29,8 +29,10 @@ public class RecipeAdapter extends android.widget.ArrayAdapter<Recipe> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.recipe_item,null);
         }
         TextView recipeName = convertView.findViewById(R.id.recipe_name);
+        recipeName.setText(recipe.getName());
 
         ImageView recipeImage = convertView.findViewById(R.id.recipe_image);
+        recipeImage.setImageBitmap(recipe.getImage());
         return convertView;
     }
 }

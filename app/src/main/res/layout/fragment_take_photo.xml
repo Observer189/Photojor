@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextureView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="85"
-        android:id="@+id/texture_view"
-        android:layout_above="@+id/capture_image"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="15"
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/capture_image"
         android:layout_alignParentBottom="true"
-        android:text="@string/capture_button"
-        android:layout_gravity="center_horizontal|center_vertical"/>
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/take_btn"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:elevation="10dp"
+        />
+    <TextureView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/texture_view"
 
-</LinearLayout>
+        android:elevation="0dp"/>
+
+</RelativeLayout>
